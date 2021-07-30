@@ -1,0 +1,19 @@
+const path = require('path')
+
+module.exports = {
+  reactStrictMode: true,
+  sassOptions: {
+    includePaths: [path.join(__dirname, '../styles')],
+  },
+  //Fill up your Content Hub endpoint and OAuth credentials. Rename the file to next.config.js 
+  serverRuntimeConfig: {
+    // Will only be available on the server side
+    contentHubEndPoint: '',
+    contentHubAuth: {
+      clientId: '',
+      clientSecret: '',
+      username: '',
+      password: ''
+    },
+  },
+}
