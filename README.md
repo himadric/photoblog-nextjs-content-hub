@@ -1,1 +1,1 @@
-# photoblog-nextjs
+# photoblog-nextjs-content-hub
