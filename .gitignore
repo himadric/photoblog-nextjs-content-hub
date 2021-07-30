@@ -105,3 +105,6 @@ dist
 
 # css files because sass is used
 *.css
+
+#sensitive
+next.config.js
