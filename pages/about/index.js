@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import getConfig from 'next/config'
-import BlogList from '../../components/BlogList'
+import GetContentHubClient from '../../Helpers/GetContentHubClient'
 import MessageBlock from '../../components/MessageBlock'
 import OAuthPasswordGrant from "@sitecore/sc-contenthub-webclient-sdk/dist/authentication/oauth-password-grant";
 import { ContentHubClient } from "@sitecore/sc-contenthub-webclient-sdk/dist/clients/content-hub-client";
@@ -17,26 +17,6 @@ const MESSAGE = {
   photos. I have created this blog to share my travel experience and share my love about camera, work of famous
   photographers and camera designers. If you would like see my work please visit my 
   <a href="https://www.himadriphoto.com/" aria-label="Photography site" target="_blank">photography site</a>.`
-}
-
-const { serverRuntimeConfig } = getConfig()
-
-function getContentHubClient() {
-    //fetch data from external source
-    // Your Sitecore Content Hub endpoint to connect to
-    const endpoint = serverRuntimeConfig.contentHubEndPoint;
-
-    // Enter your credentials here
-    const oauth = new OAuthPasswordGrant(
-            serverRuntimeConfig.contentHubAuth.clientId,
-            serverRuntimeConfig.contentHubAuth.clientSecret,
-            serverRuntimeConfig.contentHubAuth.username,
-            serverRuntimeConfig.contentHubAuth.password
-    );
-
-    // Create the JavaScript SDK client
-    const client = new ContentHubClient(endpoint, oauth);
-    return client;
 }
 
 export default function About(props) {
@@ -57,9 +37,10 @@ export default function About(props) {
     </>
   )
 }
+
 export async function getStaticProps() {
 
-  var client=getContentHubClient();
+  var client=await GetContentHubClient();
   if (await client.internalClient.authenticateAsync()) {
     var propertyQueryFilter = new PropertyQueryFilter({
       operator: ComparisonOperator.Equals,
