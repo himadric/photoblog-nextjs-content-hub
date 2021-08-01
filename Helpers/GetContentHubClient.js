@@ -19,5 +19,10 @@ export default async function GetContentHubClient() {
 
     // Create the JavaScript SDK client
     const client = new ContentHubClient(endpoint, oauth);
-    return client;
+    if (await client.internalClient.authenticateAsync()) {
+        return client;
+    }
+    else {
+        return null;
+    }
 }

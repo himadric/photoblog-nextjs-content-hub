@@ -9,7 +9,7 @@ export default function TopicCardContainer(props) {
                     key={topicCard.id}
                     id={topicCard.id}
                     image={topicCard.image}
-                    imgAlt={topicCard.imgAlt}
+                    imageAlt={topicCard.imageAlt}
                     link={topicCard.link}
                     buttonText={topicCard.buttonText}
                 />

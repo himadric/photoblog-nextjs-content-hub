@@ -8,7 +8,7 @@ export default function TopicCard(props) {
             <Image src={props.image} 
                 width="220" 
                 height="220" 
-                alt={props.imgAlt} />
+                alt={props.imageAlt} />
             <ButtonPrimary 
                 link={props.link}
                 caption={props.buttonText} />

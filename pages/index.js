@@ -3,6 +3,12 @@ import BlogList from '../components/BlogList'
 import Banner from '../components/Banner'
 import MessageBlock from '../components/MessageBlock'
 import TopicCardContainer from '../components/TopicCardContainer'
+import { PropertyQueryFilter } from "@sitecore/sc-contenthub-webclient-sdk/dist/contracts/querying/filters/property-query-filter";
+import { FilterDataType } from "@sitecore/sc-contenthub-webclient-sdk/dist/contracts/querying/filters/filter-data-type";
+import { ComparisonOperator } from "@sitecore/sc-contenthub-webclient-sdk/dist/contracts/querying/filters/comparison-operator";
+import { Query } from "@sitecore/sc-contenthub-webclient-sdk/dist/contracts/querying/query";
+import { RelationQueryFilter } from "@sitecore/sc-contenthub-webclient-sdk/dist/contracts/querying/filters/relation-query-filter";
+import GetContentHubClient from '../Helpers/GetContentHubClient'
 
 const BANNER = {
     "image": "/img/banner_large.jpg",
@@ -11,6 +17,84 @@ const BANNER = {
     "heading": "Taking Photos",
     "subHeading": "Let's talk about photograpy and camera"
 }
+
+async function getBannerContent(client) {
+  var propertyQueryFilter = new PropertyQueryFilter({
+    operator: ComparisonOperator.Equals,
+    property: "Content.Name",
+    value: "HomeBanner",
+    dataType: FilterDataType.String
+  });
+
+  var query = new Query({
+    filter: propertyQueryFilter
+  });
+  var content = await client.querying.singleAsync(query);
+  return {
+      title: content.getProperty("d4b32_Banner_Title").getValue(),
+      heading: content.getProperty("d4b32_Banner_Heading").getValue(),
+      subHeading: content.getProperty("d4b32_Banner_Sub_Heading").getValue(),
+      image: content.getProperty("d4b32_Banner_Image").getValue(),
+      imageAlt: content.getProperty("d4b32_Banner_Image_Alt").getValue()
+  }
+}
+
+async function getWelcomeMessage(client) {
+  var propertyQueryFilter = new PropertyQueryFilter({
+    operator: ComparisonOperator.Equals,
+    property: "Content.Name",
+    value: "HomeWelcomeMessage",
+    dataType: FilterDataType.String
+  });
+
+  var query = new Query({
+    filter: propertyQueryFilter
+  });
+  var content = await client.querying.singleAsync(query);
+  return {
+      title: content.getProperty("Blog_Title").getValue(),
+      body: content.getProperty("Blog_Body").getValue(),
+  }
+}
+
+async function getTopicCards(client) {
+    
+  //Get the Topic Cards collection
+  var propertyQueryFilter = new PropertyQueryFilter({
+    operator: ComparisonOperator.Equals,
+    property: "ContentCollectionName",
+    value: "Topic Cards",
+    dataType: FilterDataType.String
+  });
+
+  var query = new Query({
+    filter: propertyQueryFilter
+  });
+  var topicCardsCollection = await client.querying.singleAsync(query);
+
+  //Get all Topic Cards from the collection
+  var relationQueryFilter  = new RelationQueryFilter ({
+    relation: "ContentCollectionToContent",
+    parentId: topicCardsCollection.id
+  });
+  
+  var relationQuery = new Query({
+      filter: relationQueryFilter
+  });
+
+  var relation = await client.querying.queryAsync(relationQuery);
+  var topicCards = relation.items.map((topicCard) => (
+    {
+      "id": topicCard.identifier,
+      "image": topicCard.getProperty("6b391_Image").getValue(),
+      "imageAlt": topicCard.getProperty("6b391_ImageAlt").getValue(),
+      "link": topicCard.getProperty("6b391_Link").getValue(),
+      "buttonText": topicCard.getProperty("6b391_ButtonText").getValue(),
+    }
+  ));
+  return topicCards;
+}
+
 const TOPICS = [
   {
     "id": 1,
@@ -101,14 +185,14 @@ export default function Home(props) {
         </Head>
         <Banner 
         image={props.banner.image}
-        imgAlt={props.banner.imgAlt}
+        imgAlt={props.banner.imageAlt}
         title={props.banner.title}
         heading={props.banner.heading}
         subHeading={props.banner.subHeading} />
         <div className='container'>
         <MessageBlock
-          heading={props.message.heading}
-          message ={props.message.message} />
+          heading={props.message.title}
+          message ={props.message.body} />
           <TopicCardContainer topics={props.topics} />
           <BlogList blogs={props.blogList} />
         </div>
@@ -118,13 +202,19 @@ export default function Home(props) {
 
 export async function getStaticProps() {
   //fetch data from external source
-  return {
-    props: {
-      banner: BANNER,
-      message: MESSAGE,
-      topics: TOPICS,
-      blogList: BLOGLIST
-    },
-    revalidate: 3600
+  const client=await GetContentHubClient();
+  if(client) {
+    const banner = await getBannerContent(client);
+    const welcomeMessage = await getWelcomeMessage(client);
+    const topics = await getTopicCards(client);
+    return {
+      props: {
+        banner: banner,
+        message: welcomeMessage,
+        topics: topics,
+        blogList: BLOGLIST
+      },
+      revalidate: 3600
+    }
   }
 }
