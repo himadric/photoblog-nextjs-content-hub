@@ -5,11 +5,11 @@ import classes from './BlogItemDetail.module.scss';
 export default function BlogItemDetail(props) {
     return (
         <div className={classes.blog}>
-            <Image src={props.image} width='1038' height='692' alt={props.imgAlt} />           
             <div className={classes.blogContent}>
                 <p>{props.publishDate} . {props.readTime}</p>
                 <h2>{props.title}</h2>
-                <p>{props.content}</p>
+                <Image src={props.image} width='1038' height='692' alt={props.imgAlt} />           
+                <p><div dangerouslySetInnerHTML={{ __html: props.content}} /></p>
                 <hr />
                 <div className={classes.userReaction}>
                     <ul className={classes.leftIcons}>

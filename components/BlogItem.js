@@ -14,7 +14,9 @@ export default function BlogItem(props) {
                 <Link href={props.link} passHref>
                     <a aria-label={props.title}><h2>{props.title}</h2></a>
                 </Link>
-                <p>{props.shortDescription}</p>
+
+                    <div dangerouslySetInnerHTML={{ __html: props.shortDescription}} />
+
                 <div className={classes.userReaction}>
                     <ul className={classes.leftIcons}>
                         <li>

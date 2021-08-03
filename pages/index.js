@@ -1,4 +1,5 @@
 import Head from 'next/head'
+import Layout from '../components/Layout'
 import BlogList from '../components/BlogList'
 import Banner from '../components/Banner'
 import MessageBlock from '../components/MessageBlock'
@@ -8,15 +9,7 @@ import { FilterDataType } from "@sitecore/sc-contenthub-webclient-sdk/dist/contr
 import { ComparisonOperator } from "@sitecore/sc-contenthub-webclient-sdk/dist/contracts/querying/filters/comparison-operator";
 import { Query } from "@sitecore/sc-contenthub-webclient-sdk/dist/contracts/querying/query";
 import { RelationQueryFilter } from "@sitecore/sc-contenthub-webclient-sdk/dist/contracts/querying/filters/relation-query-filter";
-import GetContentHubClient from '../Helpers/GetContentHubClient'
-
-const BANNER = {
-    "image": "/img/banner_large.jpg",
-    "imgAlt": "Banner",
-    "title": "Photography Blog",
-    "heading": "Taking Photos",
-    "subHeading": "Let's talk about photograpy and camera"
-}
+import Helper from '../Helpers/ContentHubHelpers'
 
 async function getBannerContent(client) {
   var propertyQueryFilter = new PropertyQueryFilter({
@@ -94,37 +87,6 @@ async function getTopicCards(client) {
   ));
   return topicCards;
 }
-
-const TOPICS = [
-  {
-    "id": 1,
-    "image": "/img/photography.jpg",
-    "imgAlt": "Photography",
-    "link": "/photography",
-    "buttonText": "Photography"
-  },
-  {
-    "id": 2,
-    "image": "/img/photographer.jpg",
-    "imgAlt": "Photographer",
-    "link": "/photographer",
-    "buttonText": "Photographer"
-  },
-  {
-    "id": 3,
-    "image": "/img/camera.jpg",
-    "imgAlt": "Camera",
-    "link": "/camera",
-    "buttonText": "Camera"
-  },
-  {
-    "id": 4,
-    "image": "/img/designer.jpg",
-    "imgAlt": "Designer",
-    "link": "/camera-designer",
-    "buttonText": "Designer"
-  }
-]
 const BLOGLIST = [
   {
     "id": 1,
@@ -166,53 +128,51 @@ const BLOGLIST = [
     "noOfFavorites": 2
   }
 ]
-const MESSAGE = {
-  "heading": "",
-  "message": `Thanks for visiting my photography blog website. I am a semi professional photographer with avid interest
-  in taking photos, photographers, camera equipments and work of camera designers. I like to travel and take
-  photos. I have created this blog to share my travel experience and share my love about camera, work of famous
-  photographers and camera designers. If you would like see my work please visit my 
-  <a href="https://www.himadriphoto.com/" aria-label="Photography site" target="_blank">photography site</a>.`
-}
+
 export default function Home(props) {
   //console.log(props);
   return (
       <>  
-        <Head>
-          <title>My Photo Blog</title>
-          <meta name="description" content="My Photo Blog" />
-          <link rel="icon" href="/favicon.ico" />
-        </Head>
-        <Banner 
-        image={props.banner.image}
-        imgAlt={props.banner.imageAlt}
-        title={props.banner.title}
-        heading={props.banner.heading}
-        subHeading={props.banner.subHeading} />
-        <div className='container'>
-        <MessageBlock
-          heading={props.message.title}
-          message ={props.message.body} />
-          <TopicCardContainer topics={props.topics} />
-          <BlogList blogs={props.blogList} />
-        </div>
+        <Layout mainMenuItems = {props.mainMenuItems}> 
+          <Head>
+            <title>My Photo Blog</title>
+            <meta name="description" content="My Photo Blog" />
+            <link rel="icon" href="/favicon.ico" />
+          </Head>
+          <Banner 
+          image={props.banner.image}
+          imgAlt={props.banner.imageAlt}
+          title={props.banner.title}
+          heading={props.banner.heading}
+          subHeading={props.banner.subHeading} />
+          <div className='container'>
+          <MessageBlock
+            heading={props.message.title}
+            message ={props.message.body} />
+            <TopicCardContainer topics={props.topics} />
+            <BlogList blogs={props.blogList} />
+          </div>
+        </Layout>
     </>
   )
 }
 
 export async function getStaticProps() {
   //fetch data from external source
-  const client=await GetContentHubClient();
+  const client=await Helper.getContentHubClient();
   if(client) {
+    const mainMenuItems = await Helper.getMainMenuItems(client);
     const banner = await getBannerContent(client);
-    const welcomeMessage = await getWelcomeMessage(client);
+    const intro = await Helper.getPageIntro(client, "Home Page Intro")
     const topics = await getTopicCards(client);
+    const blogList =  await Helper.getBlogsFromCollection(client, "Recent", "photography");
     return {
       props: {
+        mainMenuItems: mainMenuItems,
         banner: banner,
-        message: welcomeMessage,
+        message: intro,
         topics: topics,
-        blogList: BLOGLIST
+        blogList: blogList
       },
       revalidate: 3600
     }

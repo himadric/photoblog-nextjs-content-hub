@@ -2,6 +2,7 @@ import Link from 'next/link'
 import classes from './MainNavigation.module.scss'
 
 export default function MainNavigation(props) {
+
     function toggleMenu()
     {
         document.querySelector(['.',classes.menu].join('')).classList.toggle(classes.show);
@@ -25,12 +26,9 @@ export default function MainNavigation(props) {
             <nav className={classes.mainNav}>
                 <div className={classes.container}>
                     <ul className={classes.menu}>
-                        <li><Link href='/'>Home</Link></li>
-                        <li><Link href='/photographer'>Photographer</Link></li>
-                        <li><Link href='/camera'>Camera</Link></li>
-                        <li><Link href='/photography'>Photography</Link></li>
-                        <li><Link href='/camera-designer'>Camera Designer</Link></li>
-                        <li><Link href='/about'>About</Link></li>
+                    {props.mainMenuItems.map((menuItem) => (
+                        <li  key={menuItem.id}><Link href={menuItem.menuLink}>{menuItem.menuCaption}</Link></li>
+                    ))}
                     </ul>
                     <ul className={classes.socialMenu}>
                         <li>

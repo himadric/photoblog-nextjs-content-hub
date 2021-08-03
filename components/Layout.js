@@ -5,7 +5,7 @@ import classes from './Layout.module.scss'
 export default function Layout(props) {
     return (
         <>
-            <MainNavigation />
+            <MainNavigation mainMenuItems = {props.mainMenuItems}/>
             <main className={classes.main}>{props.children}</main>
             <Footer />
         </>
