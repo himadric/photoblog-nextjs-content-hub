@@ -7,7 +7,7 @@ export default function Layout(props) {
         <>
             <MainNavigation mainMenuItems = {props.mainMenuItems}/>
             <main className={classes.main}>{props.children}</main>
-            <Footer />
+            <Footer footer={props.footer} />
         </>
     )
 }

@@ -152,5 +152,28 @@ export default class Helper {
             "noOfFavorites": 3
         }
     }
-        
+    
+    static async getFooter(client)
+    {
+        var propertyQueryFilter = new PropertyQueryFilter({
+        operator: ComparisonOperator.Equals,
+        property: "Content.Name",
+        value: "Footer",
+        dataType: FilterDataType.String
+        });
+    
+        var query = new Query({
+        filter: propertyQueryFilter
+        });
+        var footer = await client.querying.singleAsync(query);
+        return {
+            aboutMeHeading: footer.getProperty("13de7_AboutMeHeading").getValue(),
+            aboutMeQuote: footer.getProperty("13de7_AboutMeQuote").getValue(),
+            aboutMeImageLink: footer.getProperty("13de7_AboutMeImageLink").getValue(),
+            copyright: footer.getProperty("13de7_Copyright").getValue(),
+            subscriptionHeading: footer.getProperty("13de7_SubscriptionHeading").getValue(),
+            emailLabel: footer.getProperty("13de7_EmailLabel").getValue(),
+            subscriptionButtonCaption: footer.getProperty("13de7_SubscriptionButtonCaption").getValue(),
+        }
+    }
 }

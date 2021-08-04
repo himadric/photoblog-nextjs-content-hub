@@ -130,10 +130,9 @@ const BLOGLIST = [
 ]
 
 export default function Home(props) {
-  //console.log(props);
   return (
       <>  
-        <Layout mainMenuItems = {props.mainMenuItems}> 
+        <Layout mainMenuItems = {props.mainMenuItems} footer = {props.footer}> 
           <Head>
             <title>My Photo Blog</title>
             <meta name="description" content="My Photo Blog" />
@@ -162,6 +161,7 @@ export async function getStaticProps() {
   const client=await Helper.getContentHubClient();
   if(client) {
     const mainMenuItems = await Helper.getMainMenuItems(client);
+    const footer = await Helper.getFooter(client);
     const banner = await getBannerContent(client);
     const intro = await Helper.getPageIntro(client, "Home Page Intro")
     const topics = await getTopicCards(client);
@@ -169,6 +169,7 @@ export async function getStaticProps() {
     return {
       props: {
         mainMenuItems: mainMenuItems,
+        footer: footer,
         banner: banner,
         message: intro,
         topics: topics,

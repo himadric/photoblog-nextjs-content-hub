@@ -2,20 +2,20 @@ import Image from 'next/image'
 import Link from 'next/link'
 import classes from './Footer.module.scss'
 
-export default function Footer() {
+export default function Footer(props) {
     return (
     <footer className={classes.footer}>
         <div className="container">
             <div className={classes.footerGrid}>
                 <div className={classes.aboutMe}>
                     <div className={classes.aboutMeImage}>
-                        <Image loading="lazy" src="/img/about.jpg" width="150" height="150" alt="about" />                   
+                        <Image loading="lazy" src={props.footer.aboutMeImageLink} width="150" height="150" alt="about" />                   
                     </div>
                     <div className={classes.aboutMeContent}>
                         <ul>
                             <li>
-                                <p className={[classes.footer, classes.heading].join(' ')}>About Me</p>
-                                <p> My name is Himadri Chakrabarti. I am a photography enthusiast. I live in Columbus, Ohio.
+                                <p className={[classes.footer, classes.heading].join(' ')}>{props.footer.aboutMeHeading}</p>
+                                <p> {props.footer.aboutMeQuote}
                                 </p>                         
                             </li>
                             <li>
@@ -29,23 +29,23 @@ export default function Footer() {
                 <div className={classes.emailSubscription}>
                     <ul>
                         <li>
-                            <p className={[classes.footer, classes.heading].join(' ')}>Join My Mailing List</p>
+                            <p className={[classes.footer, classes.heading].join(' ')}>{props.footer.subscriptionHeading}</p>
                         </li>
                         <li>
-                            <label htmlFor="Email">Email*</label>
+                            <label htmlFor="Email">{props.footer.emailLabel}</label>
                         </li>
                         <li>
                             <input type="email" name="Email" id="Email" />
                         </li>
                         <li>
                             <Link href="#" passHref>
-                                <a aria-label="Subscribe Now">Subscribe Now</a>
+                                <a aria-label="Subscribe Now">{props.footer.subscriptionButtonCaption}</a>
                             </Link>
                         </li>
                     </ul>
                 </div>
                 <div className={classes.footerCopyright}>
-                    <p>&copy; Taking Photos by Himadri Chakrabarti</p>
+                    <p>{props.footer.copyright}</p>
                 </div>
                 <div className={classes.footerSocial}>
                     <ul className={classes.socialMenu}>
