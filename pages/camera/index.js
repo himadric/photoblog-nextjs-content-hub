@@ -7,5 +7,5 @@ export default function Photography(props) {
 
 export async function getStaticProps() {
   //fetch data from external source
-  return StaticPropsHelper.getBlogListStaticProps("Camera Page Intro", "Camera", "camera");
+  return await StaticPropsHelper.getBlogListStaticProps("Camera Page Intro", "Camera", "camera");
 }

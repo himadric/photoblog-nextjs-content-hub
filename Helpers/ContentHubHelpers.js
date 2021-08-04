@@ -9,6 +9,12 @@ import { RelationQueryFilter } from "@sitecore/sc-contenthub-webclient-sdk/dist/
 
 const { serverRuntimeConfig } = getConfig()
 
+function formatDate(datetime){
+    var options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    var date  = new Date(datetime);
+    return date.toLocaleDateString("en-US", options);
+}
+
 export default class Helper {
     static async getContentHubClient() {
         //fetch data from external source
@@ -103,7 +109,7 @@ export default class Helper {
             "id": blog.id,
             "image": blog.getProperty("Blog_CoverImageLink").getValue(),
             "imageAlt": blog.getProperty("Blog_CoverImageAlt").getValue(),
-            "publishDate": blog.getProperty("Content.PublishedOn").getValue(),
+            "publishDate": formatDate(blog.getProperty("Content.PublishedOn").getValue()),
             "readTime": blog.getProperty("Blog_ReadTime").getValue(),
             "link": ["/", pagename, "/", blog.id].join(''),
             "title": blog.getProperty("Blog_Title").getValue(),
@@ -142,7 +148,7 @@ export default class Helper {
             "id": blog.id,
             "image": blog.getProperty("Blog_CoverImageLink").getValue(),
             "imageAlt": blog.getProperty("Blog_CoverImageAlt").getValue(),
-            "publishDate": blog.getProperty("Content.PublishedOn").getValue(),
+            "publishDate": formatDate(blog.getProperty("Content.PublishedOn").getValue()),
             "readTime": blog.getProperty("Blog_ReadTime").getValue(),
             "title": blog.getProperty("Blog_Title").getValue(),
             "shortDescription": blog.getProperty("Blog_Quote").getValue(),

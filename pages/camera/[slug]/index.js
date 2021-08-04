@@ -6,9 +6,9 @@ export default function PhotographyBlog(props) {
 }
 
 export async function getStaticPaths() {
-  return StaticPropsHelper.getBlogListStaticPaths("Camera", "camera");
+  return await StaticPropsHelper.getBlogListStaticPaths("Camera", "camera");
 } 
 
 export async function getStaticProps(context) {
-  return StaticPropsHelper.getBlogStaticProps(context);
+  return await StaticPropsHelper.getBlogStaticProps(context);
 }
