@@ -107,4 +107,4 @@ dist
 *.css
 
 #sensitive
-next.config.js
+#next.config.js
