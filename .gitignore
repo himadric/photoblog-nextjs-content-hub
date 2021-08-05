@@ -108,3 +108,4 @@ dist
 
 #sensitive
 #next.config.js
+package-lock.json
