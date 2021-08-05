@@ -8,12 +8,12 @@ const BlogLink = styled.a``
 export default function BlogItem(props) {
     return (
         <div className={classes.blogTeaser}>
-            <Image src={props.image} width='1038' height='692' alt={props.imgAlt} />           
             <div className={classes.blogTeaserContent}>
                 <p>{props.publishDate} . {props.readTime}</p>
                 <Link href={props.link} passHref>
                     <a aria-label={props.title}><h2>{props.title}</h2></a>
                 </Link>
+                <Image src={props.image} width='1038' height='692' alt={props.imgAlt} />           
 
                     <div dangerouslySetInnerHTML={{ __html: props.shortDescription}} />
 
