@@ -1,4 +1,3 @@
-import getConfig from 'next/config'
 import cacheData from "memory-cache";
 import OAuthPasswordGrant from "@sitecore/sc-contenthub-webclient-sdk/dist/authentication/oauth-password-grant";
 import { ContentHubClient } from "@sitecore/sc-contenthub-webclient-sdk/dist/clients/content-hub-client";
@@ -8,7 +7,11 @@ import { ComparisonOperator } from "@sitecore/sc-contenthub-webclient-sdk/dist/c
 import { Query } from "@sitecore/sc-contenthub-webclient-sdk/dist/contracts/querying/query";
 import { RelationQueryFilter } from "@sitecore/sc-contenthub-webclient-sdk/dist/contracts/querying/filters/relation-query-filter";
 
-const { serverRuntimeConfig } = getConfig()
+const contentHubEndPoint = process.env.contentHubEndPoint;
+const clientId = process.env.clientId;
+const clientSecret = process.env.clientSecret;
+const username = process.env.username;
+const password = process.env.password;
 
 const getContentHubClientCacheKey = 'getContentHubClient';
 const getTopicCardsCacheKey = 'getTopicCards';
@@ -45,18 +48,16 @@ export default class Helper {
         {
             //fetch data from external source
             // Your Sitecore Content Hub endpoint to connect to
-            const endpoint = serverRuntimeConfig.contentHubEndPoint;
-        
             // Enter your credentials here
             const oauth = new OAuthPasswordGrant(
-                    serverRuntimeConfig.contentHubAuth.clientId,
-                    serverRuntimeConfig.contentHubAuth.clientSecret,
-                    serverRuntimeConfig.contentHubAuth.username,
-                    serverRuntimeConfig.contentHubAuth.password
+                    clientId,
+                    clientSecret,
+                    username,
+                    password
             );
         
             // Create the JavaScript SDK client
-            const client = new ContentHubClient(endpoint, oauth);
+            const client = new ContentHubClient(contentHubEndPoint, oauth);
             if (await client.internalClient.authenticateAsync()) {
                 cacheData.put(getContentHubClientCacheKey, client, cacheDuration);
                 await sleep(sleepInterval)

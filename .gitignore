@@ -107,5 +107,4 @@ dist
 *.css
 
 #sensitive
-#next.config.js
-package-lock.json
+.env.local
