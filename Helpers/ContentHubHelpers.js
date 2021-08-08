@@ -46,6 +46,10 @@ export default class Helper {
         }
         else
         {
+            console.log(clientId);
+            console.log(clientSecret);
+            console.log(username);
+            console.log(password);
             //fetch data from external source
             // Your Sitecore Content Hub endpoint to connect to
             // Enter your credentials here
